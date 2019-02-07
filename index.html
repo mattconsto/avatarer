@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Avatars</title>
+	<script src="canvg.min.js"></script>
+	<script src="random.js"></script>
+</head>
+<body>
+	<p><input type="text" value="email@example.com" id="input" /></p>
+	<div id="output"></div>
+	<canvas id="canvas" width="256px" height="256px"></canvas>
+	<script>
+		var svgNS = 'http://www.w3.org/2000/svg';
+		var input  = document.getElementById('input');
+		var output = document.getElementById('output');
+
+		var svgN = function(name, values) {
+			var node = document.createElementNS(svgNS, name);
+			for (var key in values) node.setAttributeNS(null, key, values[key]);
+			return node
+		}
+
+		// Todo different avatar styles
+		// Todo download links
+
+		var avatarer = function(input) {
+			// Namespace
+			var svg = document.createElementNS(svgNS, 'svg');
+			svg.setAttribute('height', '256px');
+			svg.setAttribute('width', '256px');
+			svg.setAttribute('viewBox', '0 0 1024 1024');
+
+			// Create a xfnv1a state:
+			var seed = xfnv1a(input);
+
+			// Output four 32-bit hashes to provide the seed for sfc32.
+			var rand = sfc32(seed(), seed(), seed(), seed());
+
+			var color = function() {
+				return '#' + ((rand() * 0xffffff) & 0xffffff).toString(16);
+			}
+
+			// Background
+			console.log(input);
+			svg.appendChild(svgN('rect', {x: 0, y: 0, width: 512, height: 512, fill: color()}));
+			svg.appendChild(svgN('rect', {x: 512, y: 0, width: 512, height: 512, fill: color()}));
+			svg.appendChild(svgN('rect', {x: 0, y: 512, width: 512, height: 512, fill: color()}));
+			svg.appendChild(svgN('rect', {x: 512, y: 512, width: 512, height: 512, fill: color()}));
+
+			return svg;
+		}
+
+		var placerer = function () {
+			while(output.firstChild) output.removeChild(output.firstChild);
+			var svg = avatarer(input.value);
+			canvg(document.getElementById('canvas'), svg.outerHTML);
+			output.appendChild(svg);
+		}
+
+		input.addEventListener('input', placerer);
+		placerer();
+	</script>
+</body>
+</html>
