@@ -2,138 +2,27 @@
 <html lang="en">
 <head>
 	<title>Avatarer</title>
-	<script src="canvg.min.js"></script>
-	<script src="random.js"></script>
 	<style>
 		body {font-family: sans-serif; background: #eee;}
+		canvas, svg {background: #fff;}
 		svg {margin-right: 4px;}
 	</style>
 </head>
 <body>
-	<h1>Avatarer</h1>
-	<p>Enter an email address (Or random text, anything really): <input type="text" value="email@example.com" id="input" /></p>
+	<p><h1 style="display: inline">Avatarer</h1> By <a href="https://consto.uk">Matt Consto</a></p>
+	<p>An experiment with avatar generation, SVGs, and a simple virtual DOM. PNGs created with <a href="https://github.com/canvg/canvg">canvg</a>.</p>
+	<p>Enter an email address (Or random text, anything really): <input type="text" value="hi@world.com" id="input" /></p>
 	<p>SVGs:</p>
 	<div id="output"></div>
 	<p>PNGs:</p>
 	<canvas id="canvas1" width="256px" height="256px"></canvas>
 	<canvas id="canvas2" width="256px" height="256px"></canvas>
 	<canvas id="canvas3" width="256px" height="256px"></canvas>
-	<p>By <a href="https://consto.uk">Matt Consto</a></p>
-	<script>
-		// THis code is *really* bad, but I am lazy
-		var svgNS = 'http://www.w3.org/2000/svg';
-		var input  = document.getElementById('input');
-		var output = document.getElementById('output');
-
-		function lpad(n, width, z) {
-			z = z || ' ';
-			n = n + '';
-			return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
-		}
-
-		var svgN = function(name, values) {
-			var node = document.createElementNS(svgNS, name);
-			for (var key in values) {
-				if(key === 'style') {
-					node.setAttribute(key, values[key]);
-				} else {
-					node.setAttributeNS(null, key, values[key]);
-				}
-			}
-			return node
-		}
-
-		var circle_avatarer = function(input) {
-			// Setup SVG
-			var svg = document.createElementNS(svgNS, 'svg');
-			svg.setAttribute('height', '256px');
-			svg.setAttribute('width', '256px');
-			svg.setAttribute('viewBox', '0 0 1024 1024');
-
-			// Create a xfnv1a state:
-			// Output four 32-bit hashes to provide the seed for sfc32.
-			// Random generators
-			var seed = xfnv1a(input);
-			var rand = sfc32(seed(), seed(), seed(), seed());
-			var color = function() {return '#' + lpad(((rand() * 0xffffff) & 0xffffff).toString(16), 6, '0');}
-			var int = function(max) {return Math.floor(rand() * (max + 1));}
-			
-			// Circles
-			var circles = int(4) + 3;
-			for(var i = 0; i < circles; i++) {
-				svg.appendChild(svgN('circle', {cx: int(1024), cy: int(1024), r: int(400), fill: color()}));
-			}
-
-			return svg;
-		}
-
-		var square_avatarer = function(input) {
-			// Setup SVG
-			var svg = document.createElementNS(svgNS, 'svg');
-			svg.setAttribute('height', '256px');
-			svg.setAttribute('width', '256px');
-			svg.setAttribute('viewBox', '0 0 1024 1024');
-
-			// Create a xfnv1a state:
-			// Output four 32-bit hashes to provide the seed for sfc32.
-			// Random generators
-			var seed = xfnv1a(input);
-			var rand = sfc32(seed(), seed(), seed(), seed());
-			var color = function() {return '#' + lpad(((rand() * 0xffffff) & 0xffffff).toString(16), 6, '0');}
-			var int = function(max) {return Math.floor(rand() * (max + 1));}
-
-			// Background
-			svg.appendChild(svgN('rect', {x: 0, y: 0, width: 512, height: 512, fill: color()}));
-			svg.appendChild(svgN('rect', {x: 512, y: 0, width: 512, height: 512, fill: color()}));
-			svg.appendChild(svgN('rect', {x: 0, y: 512, width: 512, height: 512, fill: color()}));
-			svg.appendChild(svgN('rect', {x: 512, y: 512, width: 512, height: 512, fill: color()}));
-
-			return svg;
-		}
-
-		var gradient_avatarer = function(input) {
-			// Setup SVG
-			var svg = document.createElementNS(svgNS, 'svg');
-			svg.setAttribute('height', '256px');
-			svg.setAttribute('width', '256px');
-			svg.setAttribute('viewBox', '0 0 1024 1024');
-
-			// Create a xfnv1a state:
-			// Output four 32-bit hashes to provide the seed for sfc32.
-			// Random generators
-			var seed = xfnv1a(input);
-			var rand = sfc32(seed(), seed(), seed(), seed());
-			var color = function() {return '#' + lpad(((rand() * 0xffffff) & 0xffffff).toString(16), 6, '0');}
-			var int = function(max) {return Math.floor(rand() * (max + 1));}
-
-			// Gradient
-			var defs = svgN('defs');
-			var lg = svgN('linearGradient', {id: 'grad', x1: int(100)+'%', y1: int(100)+'%', x2: int(100)+'%', y2: int(100)+'%'});
-			lg.appendChild(svgN('stop', {offset: '0%', 'stop-color': color()}));
-			lg.appendChild(svgN('stop', {offset: '100%', 'stop-color': color()}));
-			defs.appendChild(lg);
-			svg.appendChild(defs);
-			svg.appendChild(svgN('rect', {x: 0, y: 0, width: 1024, height: 1024, fill: 'url(#grad)'}));
-
-			return svg;
-		}
-
-		var placerer = function () {
-			while(output.firstChild) output.removeChild(output.firstChild);
-			var svg;
-			svg = circle_avatarer(input.value);
-			output.appendChild(svg);
-			canvg(document.getElementById('canvas1'), svg.outerHTML);
-			svg = square_avatarer(input.value);
-			output.appendChild(svg);
-			canvg(document.getElementById('canvas2'), svg.outerHTML);
-			svg = gradient_avatarer(input.value);
-			output.appendChild(svg);
-			canvg(document.getElementById('canvas3'), svg.outerHTML);
-		}
-
-		input.addEventListener('input', placerer);
-		placerer();
-	</script>
+	<canvas id="canvas4" width="256px" height="256px"></canvas>
+	<canvas id="canvas5" width="256px" height="256px"></canvas>
+	<p>If for some strange reason you like a particular generated avatar, feel free to use it anywhere.</p>
+	<script src="canvg.min.js"></script>
+	<script src="random.js"></script>
+	<script src="script.js"></script>
 </body>
 </html>
