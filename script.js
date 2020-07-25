@@ -1,4 +1,4 @@
-// THis code is *really* bad, but I am lazy
+// This code is *really* bad, but I am lazy
 var input  = document.getElementById('input');
 var output = document.getElementById('output');
 
@@ -15,12 +15,27 @@ var $svg = function(name, values, children) {
 }
 
 var avatarers = {
-	circle: function(r) {
+	circles: function(r) {
 		var node = [];
+		r.int();
 		var circles = r.int(4) + 3;
 		for(var i = 0; i < circles; i++) {
 			node.push(['circle', {
 				cx:r.int(128), cy:r.int(128), r:r.int(50), fill:r.color()
+			}]);
+		}
+		return node;
+	},
+	squares: function(r) {
+		var node = [];
+		var circles = r.int(4) + 3;
+		for(var i = 0; i < circles; i++) {
+			node.push(['rect', {
+				x:r.int(128),
+				y:r.int(128),
+				width:r.int(128),
+				height:r.int(128),
+				fill:r.color()
 			}]);
 		}
 		return node;
@@ -70,11 +85,11 @@ var placerer = function () {
 			avatarers[key](srand(input.value))
 		);
 		output.appendChild(svg);
-		canvg(document.getElementById('canvas' + i), svg.outerHTML);
 	}
 }
 
 window.addEventListener('load', function() {
+	input.value = new Date;
 	input.addEventListener('input', placerer);
 	input.dispatchEvent(new Event('input', {bubbles: true, cancelable: true}));
 })

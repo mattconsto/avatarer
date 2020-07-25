@@ -3,25 +3,30 @@
 <head>
 	<title>Avatarer</title>
 	<style>
-		body {font-family: sans-serif; background: #eee;}
-		canvas, svg {background: #fff;}
-		svg {margin-right: 4px;}
+		html {
+			font-family: sans-serif;
+			background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.4'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10zm10 8c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm40 40c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+			position: relative;
+			height: 100%;
+		}
+		body {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 800px;
+			padding: 10px;
+			background: #fff;
+			border: 2px solid #9C92AC;
+		}
+		svg {margin-right: 10px; margin-bottom: 10px; background: #fff}
 	</style>
 </head>
 <body>
-	<p><h1 style="display: inline">Avatarer</h1> By <a href="https://consto.uk">Matt Consto</a></p>
-	<p>An experiment with avatar generation, SVGs, and a simple virtual DOM. PNGs created with <a href="https://github.com/canvg/canvg">canvg</a>.</p>
-	<p>Enter an email address (Or random text, anything really): <input type="text" value="hi@world.com" id="input" /></p>
-	<p>SVGs:</p>
+	<h1 style="display: inline; margin-top: 0">Avatarer</h1> By <a href="https://consto.uk">Matthew Consterdine</a>
+	<p>An experiment with avatar generation, SVGs, and a simple virtual DOM. Feel free to use it anywhere.</p>
+	<p>Enter random text: <input type="text" value="hi@world.com" id="input" /></p>
 	<div id="output"></div>
-	<p>PNGs:</p>
-	<canvas id="canvas1" width="256px" height="256px"></canvas>
-	<canvas id="canvas2" width="256px" height="256px"></canvas>
-	<canvas id="canvas3" width="256px" height="256px"></canvas>
-	<canvas id="canvas4" width="256px" height="256px"></canvas>
-	<canvas id="canvas5" width="256px" height="256px"></canvas>
-	<p>If for some strange reason you like a particular generated avatar, feel free to use it anywhere.</p>
-	<script src="canvg.min.js"></script>
 	<script src="random.js"></script>
 	<script src="script.js"></script>
 </body>
