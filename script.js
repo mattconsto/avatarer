@@ -44,8 +44,10 @@ var avatarers = {
 		return [
 			['circle', {cx:64, cy:64, r:64, fill:r.color()}],
 			['text', {
-				x:64, y:64, 'text-anchor': 'middle',
-				'alignment-baseline': 'central', 'font-size':100,
+				x: 64,
+				y: 96,
+				'text-anchor': 'middle',
+				'font-size': 100,
 			}, [(r.input() ? r.input() : '?').substr(0, 1)]]
 		];
 	},
@@ -91,5 +93,5 @@ var placerer = function () {
 window.addEventListener('load', function() {
 	input.value = new Date;
 	input.addEventListener('input', placerer);
-	input.dispatchEvent(new Event('input', {bubbles: true, cancelable: true}));
-})
+	placerer();
+});
