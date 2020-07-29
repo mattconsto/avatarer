@@ -1,3 +1,3 @@
 # avatarer
 
-[![Screenshot](screenshot.png)](screenshot.png)
+[![Screenshot](screenshot.png)](https://consto.uk/avatarer)
